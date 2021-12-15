@@ -34,9 +34,6 @@ struct Turtle
     bool isVisible;
     SDL_Color *penColor;
     bool isPenDown;
-
-    SDL_Point *points;
-    size_t npoints;
 };
 
 static Turtle **turtles = NULL;
@@ -66,6 +63,7 @@ void Hide(Turtle *turtle);
 void Show(Turtle *turtle);
 void PenUp(Turtle *turtle);
 void PenDown(Turtle *turtle);
+void PenColor(Turtle *turtle, SDL_Color *penColor);
 
 void CreateTurtleWorld(int *w, int *h)
 {

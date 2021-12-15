@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     DestroyTurtle(&turtle2);
     DestroyTurtle(&turtle1);
-        
+
     DestroyTurtleWorld();
 
     return EXIT_SUCCESS;
