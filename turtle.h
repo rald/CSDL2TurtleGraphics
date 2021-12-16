@@ -7,6 +7,8 @@
 #include <math.h>
 #include <time.h>
 
+#include "util.h"
+
 #ifdef TURTLE_IMPLEMENTATION_H
 
 static SDL_Renderer *renderer;
@@ -34,6 +36,9 @@ struct Turtle
     bool isVisible;
     SDL_Color *penColor;
     bool isPenDown;
+
+    SDL_Point *points;
+    size_t npoints;
 };
 
 static Turtle **turtles = NULL;
@@ -48,10 +53,6 @@ Turtle *CreateTurtle(double x, double y, double h, double size, SDL_Color *penCo
 
 void DrawTurtles(size_t nturtles, Turtle **turtles);
 
-double drand();
-double rnd(double n);
-double sgn(double x);
-
 void RotatePoints(size_t n, SDL_Point *p, SDL_Point c, double a);
 static void plot(Turtle *turtle, int x, int y);
 static void line(Turtle *turtle, int x1, int y1, int x2, int y2);
@@ -63,7 +64,6 @@ void Hide(Turtle *turtle);
 void Show(Turtle *turtle);
 void PenUp(Turtle *turtle);
 void PenDown(Turtle *turtle);
-void PenColor(Turtle *turtle, SDL_Color *penColor);
 
 void CreateTurtleWorld(int *w, int *h)
 {
@@ -95,6 +95,17 @@ void UpdateTurtleWorld()
     SDL_RenderCopy(renderer, layer_top, NULL, NULL);
     SDL_RenderPresent(renderer);
     DrawTurtles(nturtles,turtles);
+}
+
+void PauseTurtleWorld(SDL_Event *event)
+{
+    while (1)
+    {
+        if (SDL_PollEvent(event) && event->type == SDL_QUIT)
+        {
+            break;
+        }
+    }
 }
 
 void AddTurtle(size_t *nturtles, Turtle ***turtles, Turtle *turtle)
@@ -187,25 +198,6 @@ void DrawTurtles(size_t nturtles, Turtle **turtles)
     SDL_RenderCopy(renderer, layer_bottom, NULL, NULL);
     SDL_RenderCopy(renderer, layer_top, NULL, NULL);
     SDL_RenderPresent(renderer);
-}
-
-double drand()
-{
-    return rand() / (RAND_MAX + 1.0);
-}
-
-double rnd(double x)
-{
-    return floor(drand() * x);
-}
-
-double sgn(double x)
-{
-    if (x > 0.0)
-        return 1.0;
-    if (x < 0.0)
-        return -1.0;
-    return x;
 }
 
 static void plot(Turtle *turtle, int x, int y)
@@ -328,19 +320,10 @@ void PenDown(Turtle *turtle)
 void PenColor(Turtle *turtle, SDL_Color *penColor)
 {
     turtle->penColor = penColor;
+    DrawTurtles(nturtles, turtles);    
 }
 
-void PauseTurtleWorld(SDL_Event *event)
-{
-    while (1)
-    {
-        if (SDL_PollEvent(event) && event->type == SDL_QUIT)
-        {
-            break;
-        }
-    }
-}
 
-#endif
+#endif /* TURTLE_IMPLEMENTATION_H */
 
-#endif
+#endif /* TURTLE_H */
